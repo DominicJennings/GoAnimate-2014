@@ -62,7 +62,7 @@ module.exports = {
 		size += buffer.size;
 		return buffer;
 	},
-	/**
+    /**
 	 *
 	 * @summary Saves a buffer in the props folder with a given ID.
 	 * @param {string} mId
@@ -78,27 +78,6 @@ module.exports = {
 		if (!stored.includes(aId)) stored.push(aId);
 		if (fs.existsSync(path)) size -= fs.statSync(path).size;
 		fs.writeFileSync(path, buffer);
-		size += buffer.size;
-		return buffer;
-	},
-	/**
-	 *
-	 * @summary Saves a buffer in the props folder with a given ID.
-	 * @param {string} mId
-	 * @param {string} aId
-	 * @param {Buffer} buffer
-	 */
-	saveWatermark(mId, aId, buffer, ext) {
-		if (!this.validAssetId(aId)) return;
-		localCaché[mId] = localCaché[mId] || [];
-		var stored = localCaché[mId];
-		const path = process.env.WATERMARKS_FOLDER + `/${aId}`;
-		const newPath = process.env.WATERMARKS_FOLDER + `/${aId.slice(0, -13)}-wtr.${ext}`;
-
-		if (!stored.includes(aId)) stored.push(aId);
-		if (fs.existsSync(path)) size -= fs.statSync(path).size;
-		fs.writeFileSync(path, buffer);
-		fs.renameSync(path, newPath);
 		size += buffer.size;
 		return buffer;
 	},
@@ -152,7 +131,7 @@ module.exports = {
 		this.save(mId, aId, buffer);
 		return aId;
 	},
-	/**
+    /**
 	 *
 	 * @summary Generates a new id for the props so that the fs module can read it later.
 	 * @param {Buffer} buffer
@@ -170,22 +149,6 @@ module.exports = {
 	},
 	/**
 	 *
-	 * @summary Generates a new id for the props so that the fs module can read it later.
-	 * @param {Buffer} buffer
-	 * @param {string} mId
-	 * @param {string} prefix
-	 * @param {string} suffix
-	 */
-	newWatermark(buffer, mId, prefix = "", suffix = "", ext) {
-		localCaché[mId] = localCaché[mId] || [];
-		var stored = localCaché[mId];
-		var aId = this.generateId(prefix, suffix, stored);
-		this.saveWatermark(mId, aId, buffer, ext);
-		this.save(mId, aId, buffer);
-		return aId;
-	},
-	/**
-	 *
 	 * @param {string} mId
 	 * @param {string} aId
 	 * @returns {Buffer}
@@ -198,11 +161,7 @@ module.exports = {
 		const path = `${cachéFolder}/${mId}.${aId}`;
 		stored.time = new Date();
 		if (stored.includes(aId)) {
-			if (!fs.existsSync(path)) {
-				delete localCaché[mId];
-			} else {
-				return fs.readFileSync(path);
-			}
+			return fs.readFileSync(path);
 		}
 	},
 	/**

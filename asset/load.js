@@ -1,7 +1,6 @@
 const loadPost = require("../misc/post_body");
 const asset = require("./main");
 const character = require("../character/main");
-const movie = require("../movie/main");
 const http = require("http");
 
 /**
@@ -86,9 +85,7 @@ module.exports = function (req, res, url) {
 					return true;
 				}
 				case "/goapi/deleteUserTemplate/": {
-					loadPost(req, res).then(async ([data]) => {
-						movie.delete(data.starter_id);
-					});
+					console.log('Please delete your starter in html form.');
 					return true;
 				}
 				default:

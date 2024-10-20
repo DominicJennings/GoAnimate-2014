@@ -1,6 +1,5 @@
 const exFolder = process.env.EXAMPLE_FOLDER;
 const caché = require("../asset/caché");
-var path = require('path');
 const fUtil = require("../misc/file");
 const nodezip = require("node-zip");
 const parse = require("./parse");
@@ -125,9 +124,8 @@ module.exports = {
 						}
 					}
 					if (!fs.existsSync(filePath)) res();
-					var path = `${process.env.SAVED_FOLDER}/${mId}.xml`;
-					if (!fs.existsSync(path)) res();
-					fs.unlinkSync(filePath, path);
+
+					fs.unlinkSync(filePath);
 				}
 				default:
 					res();
@@ -273,28 +271,7 @@ module.exports = {
 			fs.readSync(fd, buffer, 0, 256, 0);
 			const begTitle = buffer.indexOf("<title>") + 16;
 			const endTitle = buffer.indexOf("]]></title>");
-			const subtitle = buffer.slice(begTitle, endTitle).toString().trim();
-			
-			const begDesc = buffer.indexOf("<desc>") + 15;
-			const endDesc = buffer.indexOf("]]></desc>");
-			const desc = buffer.slice(begDesc, endDesc).toString();
-			
-			const begTag = buffer.indexOf("<tag>") + 14;
-			const endTag = buffer.indexOf("]]></tag>");
-			const subtag = buffer.slice(begTag, endTag).toString();
-			var title, tag;
-			
-			if (!subtitle) {
-				title = "Untitled Video";
-			} else {
-				title = subtitle;
-			}
-			
-			if (!subtag) {
-				tag = "none";
-			} else {
-				tag = subtag;
-			}
+			const title = buffer.slice(begTitle, endTitle).toString().trim();
 
 			const begDuration = buffer.indexOf('duration="') + 10;
 			const endDuration = buffer.indexOf('"', begDuration);
@@ -302,17 +279,6 @@ module.exports = {
 			const min = ("" + ~~(duration / 60)).padStart(2, "0");
 			const sec = ("" + ~~(duration % 60)).padStart(2, "0");
 			const durationStr = `${min}:${sec}`;
-			
-			var watermarks;
-			const wtrTxt = `${process.env.SAVED_FOLDER}/${movieId}.xml`;
-			if (!fs.existsSync(wtrTxt)) {
-				watermarks = "No Logo";
-			} else {
-				const wBuffer = fs.readFileSync(wtrTxt);
-				const begWtr = wBuffer.indexOf("<watermark>");
-				const endWtr = wBuffer.indexOf("</watermark>");
-				watermarks = wBuffer.subarray(begWtr, endWtr).toString();
-			}
 
 			fs.closeSync(fd);
 			res({
@@ -320,9 +286,6 @@ module.exports = {
 				durationString: durationStr,
 				duration: duration,
 				title: title,
-				desc: desc,
-				tag: tag,
-				watermark: watermarks,
 				id: movieId,
 			});
 		});

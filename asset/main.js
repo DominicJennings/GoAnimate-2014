@@ -12,32 +12,27 @@ module.exports = {
 		return caché.delete(mId, aId);
 	},
 	save(buffer, mId, mode, ext) {
-		var suffix, ed;
+		var suffix;
                 switch (mode) { 
-			case "prop": { 
-				suffix = `-${mode}.${ext}`;
-				return caché.newProp(buffer, mId, "", suffix); 
-                                break;
-                        }
-			case "wtr": { 
-				suffix = `-${mode}.${ext}`;
-				return caché.newWatermark(buffer, mId, "", suffix, ext); 
-                                break;
-                        }
-			case "video": { 
-                                suffix = `-${mode}.${ext}`;
-                                if (mode == "dontimport") {
-                                        console.log;
-                                } else {
-                                        return caché.newVideo(buffer, mId, "", suffix); 
-                                }
-                                break;
-			}
-			default: {
-                                suffix = `-${mode}.${ext}`;
-                                return caché.newItem(buffer, mId, "", suffix);
-                                break;
-                        }
+                         case "prop": { 
+                                 suffix = `-${mode}.${ext}`;
+                                 return caché.newProp(buffer, mId, "", suffix); 
+                                 break;
+                         }
+                         case "video": { 
+                                 suffix = `-${mode}.${ext}`;
+                                 if (mode == "dontimport") {
+                                         console.log;
+                                 } else {
+                                         return caché.newVideo(buffer, mId, "", suffix); 
+                                 }
+                                 break;
+                         }
+                         default: {
+                                 suffix = `-${mode}.${ext}`;
+                                 return caché.newItem(buffer, mId, "", suffix);
+                                 break;
+                         }
                 }
 	},
 	list(mId, mode) {
@@ -72,8 +67,8 @@ module.exports = {
 			}
 
 			return new Promise(function (resolve, reject) {
-				console.log(`/${process.env.CACHÉ_FOLDER}/${mId}.${aId}`);
-				mp3Duration(`/${process.env.CACHÉ_FOLDER}/${mId}.${aId}`, (e, d) => {
+				console.log(`${process.env.CACHÉ_FOLDER}/${mId}.${aId}`);
+				mp3Duration(`${process.env.CACHÉ_FOLDER}/${mId}.${aId}`, (e, d) => {
 					var dur = d * 1e3;
 					console.log(dur);
 					var dot = aId.lastIndexOf(".");

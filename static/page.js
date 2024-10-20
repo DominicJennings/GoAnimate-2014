@@ -31,14 +31,14 @@ module.exports = function (req, res, url) {
 	if (req.method != "GET") return;
 	const query = url.query;
 
-	var attrs, params, title, ut, trayQuery, api;
+	var attrs, params, title, ut;
 	switch (process.env.PROJECT_RELEASE) {
 		case "stable": {
 			ut = "10";
 			break;
 		}
 		case "goproduction": {
-			ut = "30";
+			ut = "25";
 			break;
 		}
 		case "dev": {
@@ -46,7 +46,6 @@ module.exports = function (req, res, url) {
 			break;
 		}
 	}
-	var trayQuery = query.tray;
 	switch (url.pathname) {
 		case "/cc": {
 			title = "Character Creator";
@@ -63,8 +62,8 @@ module.exports = function (req, res, url) {
 					storePath: process.env.STORE_URL + "/<store>",
 					clientThemePath: process.env.CLIENT_URL + "/<client_theme>",
 					original_asset_id: query["id"] || null,
-					themeId: "business",
-					ut: ut,
+					themeId: "family",
+					ut: 60,
 					bs: "default",
 					appCode: "go",
 					page: "",
@@ -97,7 +96,7 @@ module.exports = function (req, res, url) {
 					clientThemePath: process.env.CLIENT_URL + "/<client_theme>",
 					original_asset_id: query["id"] || null,
 					themeId: "family",
-					ut: ut,
+					ut: 60,
 					appCode: "go",
 					page: "",
 					siteId: "go",
@@ -132,21 +131,28 @@ module.exports = function (req, res, url) {
 					storePath: process.env.STORE_URL + "/<store>",
 					isEmbed: 1,
 					ctc: "go",
-					ut: ut,
+					ut: 30,
+					bs: "default",
+					userId: 2152,
+			    m_mode: "Y",
 					appCode: "go",
 					page: "",
 					siteId: "go",
 					lid: 13,
 					isLogin: "Y",
-					retut: 1,
+					retut: 0,
 					clientThemePath: process.env.CLIENT_URL + "/<client_theme>",
+					themeId: "custom",
+					tray: "custom",
 					tlang: "en_US",
 					presaveId: presave,
-					goteam_draft_only: 1,
+					goteam_draft_only: 0,
 					isWide: 1,
 					collab: 0,
-					nextUrl: "/html/list.html",
-					tray: trayQuery,
+					movieLid: 10,
+			    has_asset_char: "1",
+					nextUrl: "/html/list/movies.html",
+					tutorial: 1,
 				},
 				allowScriptAccess: "always",
 			};
@@ -165,7 +171,7 @@ module.exports = function (req, res, url) {
 				flashvars: {
 					apiserver: "/",
 					storePath: process.env.STORE_URL + "/<store>",
-					ut: ut,
+					ut: 30,
 					autostart: 1,
 					isWide: 1,
 					clientThemePath: process.env.CLIENT_URL + "/<client_theme>",
@@ -181,10 +187,10 @@ module.exports = function (req, res, url) {
 	}
 	res.setHeader("Content-Type", "text/html; charset=UTF-8");
 	Object.assign(params.flashvars, query);
-	res.end(`<script>document.title='${title}',flashvars=${
-		// json flashvars
-		JSON.stringify(params.flashvars)}</script><body style="margin:0px">${
-		// object flashvars
-		toObjectString(attrs, params)}</body>${stuff.pages[url.pathname] || ""}`);
+	res.end(
+		`<script>document.title='${title}',flashvars=${JSON.stringify(
+			params.flashvars
+		)}</script><body style="margin:0px">${toObjectString(attrs, params)}</body>${stuff.pages[url.pathname] || ""}`
+	);
 	return true;
 };
